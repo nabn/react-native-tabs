@@ -58,31 +58,32 @@ class Tabs extends Component {
                 }
             });
         }
-        return (
-          <View style={[styles.tabbarView, this.props.style, this.state.keyboardUp && styles.hidden]}>
-            {React.Children.map(this.props.children.filter(c=>c),(el)=>
-              <TouchableOpacity key={el.props.key}
-                testID={el.props.testID}
-                style={[ styles.iconView,
-                  this.props.iconStyle,
-                  (el.props.name || el.key) == selected
-                  ? this.props.selectedIconStyle || el.props.selectedIconStyle || {}
-                  : {} ]}
-                  onPress={()=>!self.props.locked && self.onSelect(el)}
-                  onLongPress={()=>self.onSelect(el)}
-                  activeOpacity={el.props.pressOpacity}>
-                  {el.props.children.map(c => (
-                    selected == (el.props.name || el.key)
-                    ? React.cloneElement(c,
-                      { selected: true,
-                        style: [ c.props.style,
-                          this.props.selectedStyle,
-                          c.props.selectedStyle ]})
-                    : c ))}
-                  </TouchableOpacity>
-            )}
-          </View>
-        );
+      return (
+        <View style={[styles.tabbarView, this.props.style, this.state.keyboardUp && styles.hidden]}>
+          {React.Children.map(this.props.children.filter(c=>c),(el)=>
+            <TouchableOpacity key={el.props.childKey}
+              testID={el.props.testID}
+              style={[ styles.iconView,
+                this.props.iconStyle,
+                (el.props.name || el.key) == selected
+                ? this.props.selectedIconStyle || el.props.selectedIconStyle || {}
+                : {} ]}
+                onPress={()=>!self.props.locked && self.onSelect(el)}
+                onLongPress={()=>self.onSelect(el)}
+                activeOpacity={el.props.pressOpacity}>
+                {el.props.children.map((c,i) => (
+                  selected == (el.props.name || el.key)
+                  ? React.cloneElement(c,
+                    { selected: true,
+                      key: i,
+                      style: [ c.props.style,
+                        this.props.selectedStyle,
+                        c.props.selectedStyle ]})
+                  : React.cloneElement(c, {key: i+10}) ))}
+                </TouchableOpacity>
+          )}
+        </View>
+      )
     }
 }
 var styles = StyleSheet.create({
